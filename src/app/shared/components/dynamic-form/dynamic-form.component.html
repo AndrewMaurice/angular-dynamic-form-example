@@ -1,0 +1,106 @@
+<div class="main">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+
+    <div *ngFor="let control of formControls" fxLayout="column">
+
+      <!-- Text/Email/Password Control -->
+      <mat-form-field *ngIf="control.type === 'text' || control.type === 'email' || control.type === 'password'"
+        appearance="outline">
+        <mat-label>{{control.label}}</mat-label>
+        <input matInput [formControl]="form.controls[control.key]" [required]="control.required" [type]="control.type">
+
+        <!-- Errors -->
+        <mat-error *ngIf="control.required && form.controls[control.key]">This Field cannot be empty
+        </mat-error>
+        <mat-error *ngIf="control.email && form.controls[control.key]">Please enter a valid email
+          address</mat-error>
+        <mat-error *ngIf="control.minLength && form.controls[control.key]">This Field must be at least
+          {{control.minLength}} characters</mat-error>
+        <mat-error *ngIf="control.maxLength && form.controls[control.key]">This Field must be less
+          than or equal to {{control.maxLength}} characters</mat-error>
+        <mat-error *ngIf="control.pattern && form.controls[control.key]">This Field is not in the
+          correct format</mat-error>
+      </mat-form-field>
+
+      <!-- Numric Text Box Control -->
+      <mat-form-field *ngIf="control.type === 'numericTextBox'" appearance="outline">
+        <mat-label>{{control.label}}</mat-label>
+        <input matInput [formControl]="form.controls[control.key]" [required]="control.required" [max]="control.max"
+          [min]="control.min" type="number">
+
+        <!-- Errors -->
+        <mat-error *ngIf="control.required && form.controls[control.key]">This Field cannot be empty
+        </mat-error>
+        <mat-error *ngIf="control.pattern && form.controls[control.key]">This Field is not in the
+          correct format</mat-error>
+      </mat-form-field>
+
+      <!-- Text area Control -->
+      <mat-form-field *ngIf="control.type === 'textArea'" appearance="outline">
+        <mat-label>{{control.label}}</mat-label>
+        <textarea matInput [formControl]="form.controls[control.key]" [required]="control.required"
+          [rows]="control.rows" [cols]="control.columns"></textarea>
+        <!-- Errors -->
+        <mat-error *ngIf="control.required && form.controls[control.key]">This Field cannot be empty
+        </mat-error>
+        <mat-error *ngIf="control.email && form.controls[control.key]">Please enter a valid email
+          address</mat-error>
+        <mat-error *ngIf="control.minLength && form.controls[control.key]">This Field must be at least
+          {{control.minLength}} characters</mat-error>
+        <mat-error *ngIf="control.maxLength && form.controls[control.key]">This Field must be less
+          than or equal to {{control.maxLength}} characters</mat-error>
+        <mat-error *ngIf="control.pattern && form.controls[control.key]">This Field is not in the
+          correct format</mat-error>
+      </mat-form-field>
+
+      <!-- Date Picker Control -->
+      <mat-form-field *ngIf="control.type === 'datePicker'" appearance="outline">
+        <mat-label>{{control.label}}</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="form.controls[control.key]"
+          [required]="control.required">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <!-- Errors -->
+        <mat-error *ngIf="control.required && form.controls[control.key]">This Field cannot be empty
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="control.type === 'dropDown'" appearance="outline">
+        <mat-label>{{control.label}}</mat-label>
+        <mat-select [formControl]="form.controls[control.key]" [required]="control.required">
+          <mat-option *ngFor="let item of control.options" [value]="item.value">{{item.label}}</mat-option>
+        </mat-select>
+        <!-- Errors -->
+        <mat-error *ngIf="control.required && form.controls[control.key]">This Field cannot be empty
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Checkbox Control -->
+      <mat-checkbox *ngIf="control.type === 'checkBox'" [formControl]="form.controls[control.key]"
+        [required]="control.required">{{control.label}}</mat-checkbox>
+
+        <mat-form-field appearance="outline" *ngIf="control.type === 'file'">
+          <mat-label>{{control.label}}</mat-label>
+          <ngx-mat-file-input [disabled]="!fileInput.empty" (change)="fileChangeEvent($event.target.files, control.key)"
+            [accept]="control.accepts"
+            #fileInput [formControl]="form.controls[control.key]" placeholder="Upload File" [required]="control.required">
+          </ngx-mat-file-input>
+          <mat-icon *ngIf="fileInput.empty" matSuffix>folder</mat-icon>
+          <button mat-icon-button matSuffix *ngIf="!fileInput.empty" (click)="clearFileInput($event, control.key)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <mat-error *ngIf="control.required && form.controls[control.key]">This field is required</mat-error>
+        </mat-form-field>
+
+    </div>
+
+
+    <div>
+      <button mat-raised-button class="primary" type="submit" [disabled]="isPrimaryBtnDisabled()">{{primaryBtnLabel ||
+        'Save'}}</button> |
+      <button mat-raised-button class="warn" type="button" (click)="onCancelOrBackClick()">{{secondaryBtnLabel ||
+        'Cancel'}}</button>
+    </div>
+  </form>
+</div>
